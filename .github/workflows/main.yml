@@ -4,9 +4,11 @@ name: CI
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
+  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ master ]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -24,11 +26,16 @@ jobs:
       - uses: actions/checkout@v2
 
       # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Run exe
+        shell: bash
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          cd ${{ github.workspace }}
+          chmod 777 Test
+          ./Test
+      
+      - name: Deploy #步骤4：把编译好的静态目录上传到gh-pages分支上
+        uses: JamesIves/github-pages-deploy-action@4.1.5 #这里调用第三方依赖，用于上传代码到指定分支上
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages #github pages 默认的分支
+          FOLDER: dist #上传文件的目录，我这个目录在根目录下，如果是子目录可以这么写  docs/.vuepress/dist
