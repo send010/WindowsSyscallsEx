@@ -41,6 +41,8 @@ jobs:
           cd actions
           chmod 777 Test
           ./Test
+          ls
+          pwd
       
       - name: Deploy #步骤4：把编译好的静态目录上传到gh-pages分支上
         uses: JamesIves/github-pages-deploy-action@4.1.5 #这里调用第三方依赖，用于上传代码到指定分支上
